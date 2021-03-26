@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 import Alamofire
 
 class ApiRequestManager {
@@ -15,43 +16,20 @@ class ApiRequestManager {
     var Message : String!
     var resObjects:AnyObject!
     var alamofireManager = Session.default
-    var additionalHeaders: HTTPHeaders = []
+    var additionalHeaders: HTTPHeaders = [:]
     var strAccessToken = ""
-
-    //MARK:- Encryption & Decryption Keys
-    var APP_ENC_KEY = ""
-    var APP_ENCRYPT_VI_KEY = ""
-    var APP_DEC_KEY = ""
-    var APP_DECRYPT_VI_KEY = ""
     
     //MARK:- Init Alamofire Method
     init() {
         AF.sessionConfiguration.timeoutIntervalForRequest = 60000000
     }
     
-    public func initWithSDK(isEncDec: Bool, enc_key: String, enc_vi_key: String, dec_key: String, dec_vi_key: String) {
-        if isEncDec {
-            if enc_key.count > 0, enc_vi_key.count > 0,
-               dec_key.count > 0, dec_vi_key.count > 0 {
-                APP_ENC_KEY = enc_key
-                APP_ENCRYPT_VI_KEY = enc_vi_key
-                APP_DEC_KEY = dec_key
-                APP_DECRYPT_VI_KEY = dec_vi_key
-            } else {
-                print("Please provide encrytion and decryption keys")
-            }
-        }
-    }
-    
-    public func setupRequestParameters(isToken: Bool, accessToken: String, tokenType: String, methodName: HttpMethod, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any]?, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    public func setupRequestParameters(isToken: Bool, accessToken: String, tokenType: String, methodName: HTTPMethod, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any]?, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         if isToken {
             self.strAccessToken = "\(tokenType) \(accessToken)"
         } else {
             self.strAccessToken = ""
         }
-        self.httpMethod = methodName
-        self.apiURL = endpointURL
-        self.apiMainName = apiName
         self.additionalHeaders = headers
         
         if methodName == .get {
@@ -75,34 +53,53 @@ class ApiRequestManager {
     }
     
     //MARK:- Get Token
-    func getToken() -> String {
-//        printMsg(val: "MyToken : \(UserDefaultManager.getStringFromUserDefaults(key: kAccessToken))")
-        return UserDefaultManager.getStringFromUserDefaults(key: kAccessToken)
+//    func getToken() -> String {
+////        printMsg(val: "MyToken : \(UserDefaultManager.getStringFromUserDefaults(key: kAccessToken))")
+//        return UserDefaultManager.getStringFromUserDefaults(key: kAccessToken)
+//    }
+    
+    func isConnectedToNetwork() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        })
+            else
+        {
+            return false
+        }
+        
+        var flags : SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        let available =  (isReachable && !needsConnection)
+        if(available)
+        {
+            return true
+        }
+        else
+        {
+            print("No network available")
+            return false
+        }
     }
     
     //MARK:- GET Method
     func getRequest(endpointurl:String, service: String, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         
         if isConnectedToNetwork() {
-            additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
-            
-            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) ||
-                UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsEnteredAsGuest) {
-                if service == APIResendOTP {
-                    additionalHeaders.add(name: "VerifyToken", value: UserDefaultManager.getStringFromUserDefaults(key: kAppVerifyToken))
-                } else {
-                    additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
-                }
-            } else {
-                if service == APIResendOTP {
-                    additionalHeaders.add(name: "VerifyToken", value: UserDefaultManager.getStringFromUserDefaults(key: kAppVerifyToken))
-                }
-            }
-                        
             AF.request(endpointurl, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
                 
-//                printMsg(val: "response obj : \(responseString.value ?? "")")
+                print("response obj : \(responseString.value ?? "")")
                 
                 if let responseHttpURL = responseString.response {
                     if responseHttpURL.statusCode == 200 {
@@ -133,24 +130,6 @@ class ApiRequestManager {
     func postRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         
         if isConnectedToNetwork() {
-            additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
-            
-            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) ||
-                UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsEnteredAsGuest) {
-                
-                if service == APIVerifyOTP || service == APIResetPassword {
-                    additionalHeaders.add(name: "VerifyToken", value: UserDefaultManager.getStringFromUserDefaults(key: kAppVerifyToken))
-                } else {
-                    additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
-                }
-
-            } else {
-                if service == APIVerifyOTP || service == APIResetPassword {
-                    additionalHeaders.add(name: "VerifyToken", value: UserDefaultManager.getStringFromUserDefaults(key: kAppVerifyToken))
-                }
-            }
-
             AF.request(endpointurl, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
                 
 //                printMsg(val: "response obj : \(responseString.value ?? "")")
@@ -187,7 +166,7 @@ class ApiRequestManager {
             additionalHeaders = []
             additionalHeaders.add(name: "Content-type", value: "multipart/form-data")
             additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
+//            additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
 
             AF.upload(multipartFormData: { (multipartFormData) in
                 for (key, value) in parameters
@@ -282,7 +261,7 @@ class ApiRequestManager {
                                     multipartFormData.append(mydata, withName: mykey, fileName: "pollzilla.\(fileExt)", mimeType: mime)
                                 }
                             }catch{
-                                printMsg(val: error.localizedDescription)
+                                print(error.localizedDescription)
                             }
                         }
                     }
@@ -327,16 +306,16 @@ class ApiRequestManager {
     func deleteRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         
         if isConnectedToNetwork() {
-            additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
-            
-            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
-                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
-            }
+//            additionalHeaders.add(name: "Accept", value: "application/json")
+//            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
+//
+//            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
+//                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
+//            }
                         
             AF.request(endpointurl, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
                 
-//                printMsg(val:  "response obj : \(responseString.value ?? "")")
+//                print("response obj : \(responseString.value ?? "")")
                 
                 if let responseHttpURL = responseString.response {
                     if responseHttpURL.statusCode == 200 {
@@ -367,16 +346,16 @@ class ApiRequestManager {
     func putRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         
         if isConnectedToNetwork() {
-            additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
-            
-            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
-                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
-            }
+//            additionalHeaders.add(name: "Accept", value: "application/json")
+//            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
+//
+//            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
+//                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
+//            }
                         
             AF.request(endpointurl, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
                 
-//                printMsg(val:  "response obj : \(responseString.value ?? "")")
+//                print("response obj : \(responseString.value ?? "")")
                 
                 if let responseHttpURL = responseString.response {
                     if responseHttpURL.statusCode == 200 {
@@ -407,16 +386,16 @@ class ApiRequestManager {
     func patchRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
         
         if isConnectedToNetwork() {
-            additionalHeaders.add(name: "Accept", value: "application/json")
-            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
-            
-            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
-                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
-            }
+//            additionalHeaders.add(name: "Accept", value: "application/json")
+//            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
+//
+//            if UserDefaultManager.getBooleanFromUserDefaults(key: UD_IsLoggedIn) {
+//                additionalHeaders.add(name: "Authorization", value: "Bearer \(self.getToken())")
+//            }
                         
             AF.request(endpointurl, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
                 
-//                printMsg(val:  "response obj : \(responseString.value ?? "")")
+//                print("response obj : \(responseString.value ?? "")")
                 
                 if let responseHttpURL = responseString.response {
                     if responseHttpURL.statusCode == 200 {
@@ -443,6 +422,7 @@ class ApiRequestManager {
         }
     }
     
+    /*
     //MARK:- Encryption/Decryption Methods
     func getEncryptedParameters(dictionary:[String:Any]) -> (value:String,mac:String) {
         var value = ""
@@ -486,7 +466,7 @@ class ApiRequestManager {
         let mac = final.hmac(algorithm: .SHA256, key: APP_DEC_KEY)
         if mac == macFromResponse,
             let response = value.aesDecrypt1(key: APP_DEC_KEY, iv: APP_DECRYPT_VI_KEY) {
-//            printMsg(val:  "json response:----- \(response)")
+//            print("json response:----- \(response)")
             if let dict = self.convertToDictionary(text: response) {
                 return (true,dict,nil,nil)
             } else if let arrDict = self.convertToArray(text: response) {
@@ -509,7 +489,7 @@ class ApiRequestManager {
             do {
                 return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             } catch {
-                printMsg(val:  error.localizedDescription)
+                print(error.localizedDescription)
             }
         }
         return nil
@@ -518,10 +498,10 @@ class ApiRequestManager {
     func convertToArray(text: String) -> [[String: Any]]? {
         if let data = text.data(using: .utf8) {
             do {
-                //printMsg(val:  try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]])
+                //print(try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]])
                 return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
             } catch {
-                printMsg(val:  error.localizedDescription)
+                print(error.localizedDescription)
             }
         }
         return nil
@@ -532,43 +512,44 @@ class ApiRequestManager {
             do {
                 return try JSONSerialization.jsonObject(with: data, options: []) as? [String]
             } catch {
-                printMsg(val:  error.localizedDescription)
+                print(error.localizedDescription)
             }
         }
         return nil
     }
-    
+ */
+ 
     //MARK:- Show Response Status Method
     func showErrorMessages(myDict: [String:Any], withCode: Int) -> String {
-        printMsg(val: "response error code: \(withCode)")
+        print("response error code: \(withCode)")
         if withCode == 401 {
             //Logout Automatically
-            UserDefaultManager.resetUserDefaultValues()
+//            UserDefaultManager.resetUserDefaultValues()
             
             var isGoBack: Bool = true
-            if let arr = APP_DELEGATE.appNavigation?.viewControllers {
-                for vc in arr {
-                    if let _ = vc as? TabbarVC {
-                        isGoBack = false
-                    }
-                }
-            }
+//            if let arr = APP_DELEGATE.appNavigation?.viewControllers {
+//                for vc in arr {
+//                    if let _ = vc as? TabbarVC {
+//                        isGoBack = false
+//                    }
+//                }
+//            }
             
-            if isGoBack {
-                APP_DELEGATE.appNavigation = UINavigationController(rootViewController: loadVC(strStoryboardId: SB_TABBAR, strVCId: idTabbarVC))
-                APP_DELEGATE.appNavigation?.isNavigationBarHidden = true
-                APP_DELEGATE.appNavigation?.interactivePopGestureRecognizer?.delegate = nil
-                APP_DELEGATE.appNavigation?.interactivePopGestureRecognizer?.isEnabled = true
-                APP_DELEGATE.window?.rootViewController = APP_DELEGATE.appNavigation
-                APP_DELEGATE.window?.makeKeyAndVisible()
-            }
+//            if isGoBack {
+//                APP_DELEGATE.appNavigation = UINavigationController(rootViewController: loadVC(strStoryboardId: SB_TABBAR, strVCId: idTabbarVC))
+//                APP_DELEGATE.appNavigation?.isNavigationBarHidden = true
+//                APP_DELEGATE.appNavigation?.interactivePopGestureRecognizer?.delegate = nil
+//                APP_DELEGATE.appNavigation?.interactivePopGestureRecognizer?.isEnabled = true
+//                APP_DELEGATE.window?.rootViewController = APP_DELEGATE.appNavigation
+//                APP_DELEGATE.window?.makeKeyAndVisible()
+//            }
         }
         
         if let errordict = myDict["errors"] as? NSDictionary,
             errordict.count > 0 {
             var strerr = ""
             for (offset: index,element: (key: _,value: value)) in errordict.enumerated() {
-//                printMsg(val:  "error value : \(index)")
+//                print("error value : \(index)")
                 
                 if let mymsg = value as? String {
                     if index == errordict.count - 1 {
@@ -598,7 +579,7 @@ class ApiRequestManager {
     
     func showStatusCode(msg: String) {
         DispatchQueue.main.async {
-            showMessage(msg)
+            print(msg)
         }
     }
 }

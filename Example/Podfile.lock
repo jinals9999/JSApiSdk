@@ -1,16 +1,24 @@
 PODS:
-  - JSApiSdk (0.1.0)
+  - Alamofire (5.4.1)
+  - JSApiSdk (1.0.0):
+    - Alamofire (~> 5.2)
 
 DEPENDENCIES:
+  - Alamofire
   - JSApiSdk (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
 
 EXTERNAL SOURCES:
   JSApiSdk:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JSApiSdk: 27703a19b6774fd39ded4844e61e6aef7342f045
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  JSApiSdk: 916776528156e1d1b2b767ee06b776c9bc53a096
 
-PODFILE CHECKSUM: b53fda995876dd3cb25c312cb9cfea1d48c62a71
+PODFILE CHECKSUM: 245bab9fa6393d7eace364103b45b9940761589d
 
 COCOAPODS: 1.10.1

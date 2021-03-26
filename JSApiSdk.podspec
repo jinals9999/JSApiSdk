@@ -30,11 +30,8 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '12.1'
 
   s.source_files = 'Classes/**/*'
-  s.preserve_path = "${POD_ROOT}/JSApiSdk/JSApiSdkHeader.h"
-  s.xcconfig = { 'SWIFT_OBJC_BRIDGING_HEADER' => '${POD_ROOT}/JSApiSdk/JSApiSdkHeader.h' }
 
-  s.dependency 'Alamofire'
-  s.dependency 'CryptoSwift'
+  s.dependency 'Alamofire', '~> 5.2'
   
   # s.resource_bundles = {
   #   'JSApiSdk' => ['JSApiSdk/Assets/*.png']

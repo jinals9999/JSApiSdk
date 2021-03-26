@@ -1,7 +1,7 @@
 {
   "name": "JSApiSdk",
-  "version": "0.1.0",
-  "summary": "A short description of JSApiSdk.",
+  "version": "1.0.0",
+  "summary": "JSApiSdk containt the structure of API calling and easy to use it.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/jinals9999/JSApiSdk",
   "license": {
@@ -13,10 +13,15 @@
   },
   "source": {
     "git": "https://github.com/jinals9999/JSApiSdk.git",
-    "tag": "0.1.0"
+    "tag": "1.0.0"
   },
   "platforms": {
-    "ios": "9.0"
+    "ios": "12.1"
   },
-  "source_files": "JSApiSdk/Classes/**/*"
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "Alamofire": [
+      "~> 5.2"
+    ]
+  }
 }
