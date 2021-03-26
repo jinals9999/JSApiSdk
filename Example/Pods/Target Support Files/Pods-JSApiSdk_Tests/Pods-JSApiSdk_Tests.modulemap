@@ -1,0 +1,6 @@
+framework module Pods_JSApiSdk_Tests {
+  umbrella header "Pods-JSApiSdk_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

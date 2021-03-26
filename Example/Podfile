@@ -1,0 +1,6 @@
+use_frameworks!
+target 'JSApiSdk_Tests' do
+  pod 'JSApiSdk', :path => '../'
+  
+  
+end

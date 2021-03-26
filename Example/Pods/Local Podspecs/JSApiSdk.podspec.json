@@ -1,0 +1,22 @@
+{
+  "name": "JSApiSdk",
+  "version": "0.1.0",
+  "summary": "A short description of JSApiSdk.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/jinals9999/JSApiSdk",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "jinals9999": "jinal.s@cearsinfotech.com"
+  },
+  "source": {
+    "git": "https://github.com/jinals9999/JSApiSdk.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "JSApiSdk/Classes/**/*"
+}

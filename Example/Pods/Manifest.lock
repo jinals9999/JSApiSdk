@@ -1,0 +1,16 @@
+PODS:
+  - JSApiSdk (0.1.0)
+
+DEPENDENCIES:
+  - JSApiSdk (from `../`)
+
+EXTERNAL SOURCES:
+  JSApiSdk:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  JSApiSdk: 27703a19b6774fd39ded4844e61e6aef7342f045
+
+PODFILE CHECKSUM: b53fda995876dd3cb25c312cb9cfea1d48c62a71
+
+COCOAPODS: 1.10.1
