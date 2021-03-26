@@ -10,13 +10,13 @@ import SystemConfiguration
 import Alamofire
 
 public class ApiRequestManager {
-    static let sharedInstance = ApiRequestManager()
+    public static let sharedInstance = ApiRequestManager()
     var responseObjectDic = Dictionary<String, AnyObject>()
     var URLString : String!
     var Message : String!
     var resObjects:AnyObject!
     var alamofireManager = Session.default
-    var additionalHeaders: HTTPHeaders = [:]
+    public var additionalHeaders: HTTPHeaders = [:]
     var strAccessToken = ""
     
     //MARK:- Init Alamofire Method
