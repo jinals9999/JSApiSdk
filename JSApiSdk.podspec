@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JSApiSdk'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of JSApiSdk.'
+  s.version          = '1.0.0'
+  s.summary          = 'JSApiSdk containt the structure of API calling and easy to use it.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -26,11 +26,15 @@ TODO: Add long description of the pod here.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'jinals9999' => 'jinal.s@cearsinfotech.com' }
   s.source           = { :git => 'https://github.com/jinals9999/JSApiSdk.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  
+  s.ios.deployment_target = '12.1'
 
-  s.ios.deployment_target = '9.0'
+  s.source_files = 'Classes/**/*'
+  s.preserve_path = "${POD_ROOT}/JSApiSdk/JSApiSdkHeader.h"
+  s.xcconfig = { 'SWIFT_OBJC_BRIDGING_HEADER' => '${POD_ROOT}/JSApiSdk/JSApiSdkHeader.h' }
 
-  s.source_files = 'JSApiSdk/Classes/**/*'
+  s.dependency 'Alamofire'
+  s.dependency 'CryptoSwift'
   
   # s.resource_bundles = {
   #   'JSApiSdk' => ['JSApiSdk/Assets/*.png']

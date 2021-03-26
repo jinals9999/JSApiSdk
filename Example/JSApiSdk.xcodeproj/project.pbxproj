@@ -12,13 +12,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		11A7A74E81E3AB7CBB995D9B /* JSApiSdk.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = JSApiSdk.podspec; path = ../JSApiSdk.podspec; sourceTree = "<group>"; };
-		18398D5E4C19E6D0AA778F6E /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		11A7A74E81E3AB7CBB995D9B /* JSApiSdk.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = JSApiSdk.podspec; path = ../JSApiSdk.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		18398D5E4C19E6D0AA778F6E /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* JSApiSdk_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JSApiSdk_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		60E6837ED6B07FCC8C05D1F4 /* Pods-JSApiSdk_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSApiSdk_Tests.release.xcconfig"; path = "Target Support Files/Pods-JSApiSdk_Tests/Pods-JSApiSdk_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		B54641A08A263BAB16D882FB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		B54641A08A263BAB16D882FB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		BF13B9C1CA9E098449A0B47B /* Pods_JSApiSdk_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JSApiSdk_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4038F83607A1A8B5DA0F59E /* Pods-JSApiSdk_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSApiSdk_Tests.debug.xcconfig"; path = "Target Support Files/Pods-JSApiSdk_Tests/Pods-JSApiSdk_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,7 +95,6 @@
 				C4038F83607A1A8B5DA0F59E /* Pods-JSApiSdk_Tests.debug.xcconfig */,
 				60E6837ED6B07FCC8C05D1F4 /* Pods-JSApiSdk_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -131,10 +130,6 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					607FACCF1AFB9204008FA782 = {
-						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
-					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
@@ -147,6 +142,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

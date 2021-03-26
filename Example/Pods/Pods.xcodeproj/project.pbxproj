@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		22DE522FDBA19AF39995FEC77D1213F0 /* JSApiSdk-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EA45B033FB881B4CBCC95218BAA4F945 /* JSApiSdk-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		258F849BB446ABB38F506A1012DF3F43 /* JSApiSdk-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E64DB0215EA89B8AC8A186A6E53551A2 /* JSApiSdk-dummy.m */; };
-		296437DC52CE2507E16CE0119F67E439 /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80D4BF25E92027E33CE81C832A41328 /* ReplaceMe.swift */; };
 		5761B03DD3ED01257D6EC76165DC1FCF /* Pods-JSApiSdk_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A39A389CD0FDF6B687E6705EA2A540 /* Pods-JSApiSdk_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7D5C52A033FA0A2E0107DCF245825D41 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		88B455E5260D9D0700F45847 /* ApiRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B455E4260D9D0700F45847 /* ApiRequestManager.swift */; };
+		88B455EB260DAEF300F45847 /* AES256CBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B455E8260DAEF300F45847 /* AES256CBC.swift */; };
+		88B455EC260DAEF300F45847 /* SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B455E9260DAEF300F45847 /* SHA256.swift */; };
+		88B455ED260DAEF300F45847 /* String+AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B455EA260DAEF300F45847 /* String+AES.swift */; };
+		88B455F2260DB05500F45847 /* JSApiSdkHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 88B455F1260DB05500F45847 /* JSApiSdkHeader.h */; };
 		C3C94EBCD9ECD63F82CEF7A27E6B937F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		EC2182773FFFB08851CBC99301A2CC7F /* Pods-JSApiSdk_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF7187950152E5AD5ED93E8F1356C94 /* Pods-JSApiSdk_Tests-dummy.m */; };
 /* End PBXBuildFile section */
@@ -27,27 +31,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		23A5E452C493402DDAC5C00B8739D986 /* JSApiSdk.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = JSApiSdk.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		24FCE9426942C02D9D5598977A54ECCB /* JSApiSdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JSApiSdk.framework; path = JSApiSdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		23A5E452C493402DDAC5C00B8739D986 /* JSApiSdk.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = JSApiSdk.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		24FCE9426942C02D9D5598977A54ECCB /* JSApiSdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JSApiSdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		26CB8284035846FE0722413CB5D5EA89 /* Pods-JSApiSdk_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JSApiSdk_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		4BF7187950152E5AD5ED93E8F1356C94 /* Pods-JSApiSdk_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JSApiSdk_Tests-dummy.m"; sourceTree = "<group>"; };
-		4E243EC115301BC56F0B4828B8EE25D6 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		4E243EC115301BC56F0B4828B8EE25D6 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		59D1D28D26615AF483BB4CA215396DF1 /* JSApiSdk-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JSApiSdk-Info.plist"; sourceTree = "<group>"; };
 		6F9E6608C937E2529C677C2DB514249B /* JSApiSdk.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = JSApiSdk.modulemap; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		73DB75AC859381973E6FED21F273C98D /* Pods-JSApiSdk_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSApiSdk_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		77CF2F0A2C617EDDDE833DBF6DF80792 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		77CF2F0A2C617EDDDE833DBF6DF80792 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7DE22A436008FAA22E6D843A0CD00F86 /* Pods-JSApiSdk_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JSApiSdk_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		81B67A2A7EB641D4FC09174E783B1EAD /* Pods-JSApiSdk_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-JSApiSdk_Tests.modulemap"; sourceTree = "<group>"; };
+		88B455E4260D9D0700F45847 /* ApiRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestManager.swift; sourceTree = "<group>"; };
+		88B455E8260DAEF300F45847 /* AES256CBC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AES256CBC.swift; sourceTree = "<group>"; };
+		88B455E9260DAEF300F45847 /* SHA256.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHA256.swift; sourceTree = "<group>"; };
+		88B455EA260DAEF300F45847 /* String+AES.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AES.swift"; sourceTree = "<group>"; };
+		88B455F1260DB05500F45847 /* JSApiSdkHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSApiSdkHeader.h; sourceTree = "<group>"; };
 		89D20226FEFD3207774CCE6AA8380627 /* Pods-JSApiSdk_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JSApiSdk_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E889311E2EF143CD1579251075F1466 /* JSApiSdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JSApiSdk.debug.xcconfig; sourceTree = "<group>"; };
-		A80D4BF25E92027E33CE81C832A41328 /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = JSApiSdk/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
 		B7F7CFE0BC7659FE30B4C61E18070A69 /* Pods-JSApiSdk_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSApiSdk_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		C10C8849F0BBCC94D1863FAC1C4327D5 /* JSApiSdk-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JSApiSdk-prefix.pch"; sourceTree = "<group>"; };
 		D0A39A389CD0FDF6B687E6705EA2A540 /* Pods-JSApiSdk_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JSApiSdk_Tests-umbrella.h"; sourceTree = "<group>"; };
 		D4FDB1A60FC290E9B3358C91F4C15EE0 /* Pods-JSApiSdk_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JSApiSdk_Tests-Info.plist"; sourceTree = "<group>"; };
-		D8BE9B440DAE89794AD2E41C757E50E4 /* Pods_JSApiSdk_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JSApiSdk_Tests.framework; path = "Pods-JSApiSdk_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8BE9B440DAE89794AD2E41C757E50E4 /* Pods_JSApiSdk_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JSApiSdk_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64DB0215EA89B8AC8A186A6E53551A2 /* JSApiSdk-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JSApiSdk-dummy.m"; sourceTree = "<group>"; };
 		EA45B033FB881B4CBCC95218BAA4F945 /* JSApiSdk-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JSApiSdk-umbrella.h"; sourceTree = "<group>"; };
 		F39FDD92AE2E47DC512B177D5CAE5577 /* JSApiSdk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JSApiSdk.release.xcconfig; sourceTree = "<group>"; };
@@ -84,7 +92,8 @@
 		1776280A5A1CBFE9B7F85B905EC02936 /* JSApiSdk */ = {
 			isa = PBXGroup;
 			children = (
-				A80D4BF25E92027E33CE81C832A41328 /* ReplaceMe.swift */,
+				88B455F1260DB05500F45847 /* JSApiSdkHeader.h */,
+				88B455E3260D9CF100F45847 /* Classes */,
 				CCC7D026E381AA920D39EAE147523BB6 /* Pod */,
 				275F7AA1824DBE39DDB3CB25A1A2C78F /* Support Files */,
 			);
@@ -113,6 +122,17 @@
 				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		88B455E3260D9CF100F45847 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				88B455E4260D9D0700F45847 /* ApiRequestManager.swift */,
+				88B455E8260DAEF300F45847 /* AES256CBC.swift */,
+				88B455E9260DAEF300F45847 /* SHA256.swift */,
+				88B455EA260DAEF300F45847 /* String+AES.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		CCC7D026E381AA920D39EAE147523BB6 /* Pod */ = {
@@ -193,6 +213,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88B455F2260DB05500F45847 /* JSApiSdkHeader.h in Headers */,
 				22DE522FDBA19AF39995FEC77D1213F0 /* JSApiSdk-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +266,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1100;
+				TargetAttributes = {
+					1F80DDE5AFC55A161DD7EB9880AA5560 = {
+						LastSwiftMigration = 1240;
+					};
+				};
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -287,8 +313,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88B455EC260DAEF300F45847 /* SHA256.swift in Sources */,
+				88B455ED260DAEF300F45847 /* String+AES.swift in Sources */,
+				88B455E5260D9D0700F45847 /* ApiRequestManager.swift in Sources */,
+				88B455EB260DAEF300F45847 /* AES256CBC.swift in Sources */,
 				258F849BB446ABB38F506A1012DF3F43 /* JSApiSdk-dummy.m in Sources */,
-				296437DC52CE2507E16CE0119F67E439 /* ReplaceMe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +345,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F39FDD92AE2E47DC512B177D5CAE5577 /* JSApiSdk.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -398,8 +428,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -409,6 +438,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E889311E2EF143CD1579251075F1466 /* JSApiSdk.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -428,6 +458,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
