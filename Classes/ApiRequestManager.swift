@@ -9,7 +9,7 @@ import Foundation
 import SystemConfiguration
 import Alamofire
 
-class ApiRequestManager {
+public class ApiRequestManager {
     static let sharedInstance = ApiRequestManager()
     var responseObjectDic = Dictionary<String, AnyObject>()
     var URLString : String!
