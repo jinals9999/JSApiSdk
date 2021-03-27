@@ -34,16 +34,15 @@ public class ApiRequestManager {
      */
     
     //MARK:- Setup Request Parameters Method
-    public func setupRequestParameters(isToken: Bool, accessToken: String, tokenType: String, methodName: HTTPMethod, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any]?, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    public func setupRequestParameters(isToken: Bool, accessToken: String, tokenType: String, methodName: HTTPMethod, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any]?, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         if !isDeviceConnectedToNetwork() {
-            responseData(nil, nil, nil, "Sorry! You're not connected to network.")
+            responseData(nil, nil, nil, "Sorry! You're not connected to network.", 0)
             
         } else {
             if isToken {
                 if tokenType.count > 0, tokenType == "",
                    accessToken.count == 0, accessToken == "" {
-                    print("Please provide access token")
-                    responseData(nil, nil, nil, "Please provide access token")
+                    responseData(nil, nil, nil, "Please provide access token", 0)
                     return
                 } else {
                     self.strAccessToken = "\(tokenType) \(accessToken)"
@@ -54,28 +53,28 @@ public class ApiRequestManager {
             self.additionalHeaders = headers
             
             if methodName == .get {
-                self.getRequest(endpointurl: endpointURL, service: apiName) { (error, resArr, resDict, message) in
-                    responseData(error, resArr, resDict, message)
+                self.getRequest(endpointurl: endpointURL, service: apiName) { (error, resArr, resDict, message, statusCode) in
+                    responseData(error, resArr, resDict, message, statusCode)
                 }
                 
             } else if methodName == .post {
-                self.postRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message) in
-                    responseData(error, resArr, resDict, message)
+                self.postRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message, statusCode) in
+                    responseData(error, resArr, resDict, message, statusCode)
                 }
                 
             } else if methodName == .delete {
-                self.deleteRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message) in
-                    responseData(error, resArr, resDict, message)
+                self.deleteRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message, statusCode) in
+                    responseData(error, resArr, resDict, message, statusCode)
                 }
                 
             } else if methodName == .put {
-                self.putRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message) in
-                    responseData(error, resArr, resDict, message)
+                self.putRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message, statusCode) in
+                    responseData(error, resArr, resDict, message, statusCode)
                 }
                 
             } else if methodName == .patch {
-                self.patchRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message) in
-                    responseData(error, resArr, resDict, message)
+                self.patchRequest(endpointurl: endpointURL, service: apiName, parameters: parameters ?? [:]) { (error, resArr, resDict, message, statusCode) in
+                    responseData(error, resArr, resDict, message, statusCode)
                 }
             }
         }
@@ -93,24 +92,23 @@ public class ApiRequestManager {
      */
     
     //MARK:- Setup Multipart Request Parameters Method
-    public func setupMultipartRequestParameters(isImage: Bool, accessToken: String, tokenType: String, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any], responseData:@escaping (_ data: AnyObject?, _ error: NSError?, _ message: String?, _ responseDict: AnyObject?, _ errorMessage: String?) -> Void) {
+    public func setupMultipartRequestParameters(isImage: Bool, accessToken: String, tokenType: String, endpointURL: String, apiName: String, headers: HTTPHeaders, parameters: [String:Any], responseData:@escaping (_ error: NSError?, _ responseDict: AnyObject?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         if !isDeviceConnectedToNetwork() {
-            responseData(nil, nil, nil, nil, "Sorry! You're not connected to network.")
+            responseData(nil, nil, "Sorry! You're not connected to network.", 0)
             
         } else {
             if tokenType.count == 0, tokenType == "",
                accessToken.count == 0, accessToken == "" {
-                print("Please provide access token")
-                responseData(nil, nil, nil, nil, "Please provide access token")
+                responseData(nil, nil, "Please provide access token", 0)
                 return
             } else {
                 self.strAccessToken = "\(tokenType) \(accessToken)"
             }
             self.additionalHeaders = headers
 
-            self.requestWithPostMultipartParam(endpointurl: endpointURL, isImage: isImage, strAppName: apiName, parameters: parameters as NSDictionary) { (data, error, message, resDict, errMessage) in
-                responseData(data, error, message, resDict, errMessage)
+            self.requestWithPostMultipartParam(endpointurl: endpointURL, isImage: isImage, strAppName: apiName, parameters: parameters as NSDictionary) { (error, resDict, errMessage, statusCode) in
+                responseData(error, resDict, errMessage, statusCode)
             }
         }
     }
@@ -126,8 +124,7 @@ public class ApiRequestManager {
                 SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
             }
         })
-        else
-        {
+        else {
             return false
         }
         
@@ -139,19 +136,16 @@ public class ApiRequestManager {
         let isReachable = flags.contains(.reachable)
         let needsConnection = flags.contains(.connectionRequired)
         let available =  (isReachable && !needsConnection)
-        if(available)
-        {
+        if(available) {
             return true
-        }
-        else
-        {
+        } else {
             print("No network available")
             return false
         }
     }
     
     //MARK:- GET Method
-    func getRequest(endpointurl:String, service: String, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    func getRequest(endpointurl:String, service: String, responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         AF.request(endpointurl, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
             
@@ -160,29 +154,29 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,nil,"",responseHttpURL.statusCode)
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil,nil,nil, errMsg)
+                        responseData(nil,nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil,nil,nil, "Server Response Error")
+                        responseData(nil,nil,nil, "Server Response Error",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
     
     //MARK:- POST Method
-    func postRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    func postRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         AF.request(endpointurl, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: additionalHeaders).responseJSON { (responseString)-> Void in
             
@@ -191,30 +185,30 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,nil,"",responseHttpURL.statusCode)
                         
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil,nil,nil, errMsg)
+                        responseData(nil,nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil,nil,nil, "ServerResponseError")
+                        responseData(nil,nil,nil, "ServerResponseError",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
         
     //MARK:- Multipart Form Data Method
-    func requestWithPostMultipartParam(endpointurl:String, isImage: Bool, strAppName: String, parameters:NSDictionary, responseData:@escaping (_ data: AnyObject?, _ error: NSError?, _ message: String?, _ responseDict: AnyObject?, _ errorMessage: String?) -> Void) {
+    func requestWithPostMultipartParam(endpointurl:String, isImage: Bool, strAppName: String, parameters:NSDictionary, responseData:@escaping (_ error: NSError?, _ responseDict: AnyObject?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         
 //        additionalHeaders = []
@@ -324,7 +318,6 @@ public class ApiRequestManager {
                     }
                 }
             }
-            
         },to: endpointurl, usingThreshold: UInt64.init(),
         method: .post,
         headers: additionalHeaders).responseJSON { (responseString)-> Void in
@@ -334,30 +327,30 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(nil, responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,"",responseHttpURL.statusCode)
                         
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil, nil,nil,nil, errMsg)
+                        responseData(nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil, nil,nil,nil, "ServerResponseError")
+                        responseData(nil,nil, "ServerResponseError",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
     
     //MARK:- DELETE Method
-    func deleteRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    func deleteRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         //            additionalHeaders.add(name: "Accept", value: "application/json")
         //            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
@@ -373,29 +366,29 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,nil,"",responseHttpURL.statusCode)
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil,nil,nil, errMsg)
+                        responseData(nil,nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil,nil,nil, "Server Response Error")
+                        responseData(nil,nil,nil, "Server Response Error",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
     
     //MARK:- PUT Method
-    func putRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    func putRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         //            additionalHeaders.add(name: "Accept", value: "application/json")
         //            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
@@ -411,29 +404,29 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,nil,"",responseHttpURL.statusCode)
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil,nil,nil, errMsg)
+                        responseData(nil,nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil,nil,nil, "Server Response Error")
+                        responseData(nil,nil,nil, "Server Response Error",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
     
     //MARK:- PATCH Method
-    func patchRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?) -> Void) {
+    func patchRequest(endpointurl:String, service: String, parameters: [String:Any], responseData:@escaping  (_ error: NSError?,_ responseArray: NSArray?, _ responseDict: NSDictionary?, _ errorMessage: String?, _ statusCode: Int) -> Void) {
         
         //            additionalHeaders.add(name: "Accept", value: "application/json")
         //            additionalHeaders.add(name: "Content-Type", value: "application/x-www-form-urlencoded")
@@ -449,123 +442,26 @@ public class ApiRequestManager {
             if let responseHttpURL = responseString.response {
                 if responseHttpURL.statusCode == 200 {
                     if(responseString.value == nil) {
-                        responseData(responseString.error as NSError?,nil,nil,"")
+                        responseData(responseString.error as NSError?,nil,nil,"",responseHttpURL.statusCode)
                     } else {
                         self.resObjects = responseString.value as AnyObject
-                        responseData(nil,nil,self.resObjects as? NSDictionary,"")
+                        responseData(nil,nil,self.resObjects as? NSDictionary,"",responseHttpURL.statusCode)
                     }
                 } else {
                     self.resObjects = responseString.value as AnyObject
                     if let errodict = self.resObjects as? [String : Any] {
                         let errMsg = self.showErrorMessages(myDict: errodict, withCode: responseString.response?.statusCode ?? 0)
-                        responseData(nil,nil,nil, errMsg)
+                        responseData(nil,nil,nil, errMsg,responseHttpURL.statusCode)
                         
                     } else {
-                        responseData(nil,nil,nil, "Server Response Error")
+                        responseData(nil,nil,nil, "Server Response Error",responseHttpURL.statusCode)
                     }
                 }
             } else {
-                responseData(nil,nil,nil, "Oops! Request timed out!")
+                responseData(nil,nil,nil, "Oops! Request timed out!",responseString.response?.statusCode ?? 0)
             }
         }
     }
-    
-    /*
-     //MARK:- Encryption/Decryption Methods
-     func getEncryptedParameters(dictionary:[String:Any]) -> (value:String,mac:String) {
-     var value = ""
-     if let theJSONData = try? JSONSerialization.data( withJSONObject: dictionary,
-     options: []) {
-     let theJSONText = String(data: theJSONData, encoding: .ascii)
-     value = (try! theJSONText?.aesEncrypt1(key: APP_ENC_KEY, iv: APP_ENCRYPT_VI_KEY))!
-     }
-     
-     let data = (APP_ENCRYPT_VI_KEY).data(using: String.Encoding.utf8)
-     let base64String = data!.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
-     let final = "\(base64String)"+"\(value)"
-     let mac = final.hmac(algorithm: .SHA256, key: APP_ENC_KEY)
-     return (value,mac)
-     }
-     
-     func getInnerEncryptedParameters(dictionary:[String:Any]) -> [String:Any]
-     {
-     var value = ""
-     if let theJSONData = try? JSONSerialization.data( withJSONObject: dictionary,
-     options: []) {
-     let theJSONText = String(data: theJSONData, encoding: .ascii)
-     value = (try! theJSONText?.aesEncrypt1(key: APP_ENC_KEY, iv: APP_ENCRYPT_VI_KEY))!
-     }
-     
-     let data = (APP_ENCRYPT_VI_KEY).data(using: String.Encoding.utf8)
-     let base64String = data!.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
-     
-     let final = "\(base64String)"+"\(value)"
-     let mac = final.hmac(algorithm: .SHA256, key: APP_ENC_KEY)
-     
-     let dict:[String:Any] = ["mac" : mac, "value": value]
-     return dict
-     }
-     
-     func isGotValidResponseFromMac(value:String,macFromResponse:String) -> (Bool,[String:Any]?,[[String:Any]]?,[String]?)
-     {
-     let data = (APP_DECRYPT_VI_KEY).data(using: String.Encoding.utf8)
-     let base64String = data!.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
-     let final = "\(base64String)"+"\(value)"
-     let mac = final.hmac(algorithm: .SHA256, key: APP_DEC_KEY)
-     if mac == macFromResponse,
-     let response = value.aesDecrypt1(key: APP_DEC_KEY, iv: APP_DECRYPT_VI_KEY) {
-     //            print("json response:----- \(response)")
-     if let dict = self.convertToDictionary(text: response) {
-     return (true,dict,nil,nil)
-     } else if let arrDict = self.convertToArray(text: response) {
-     return (true,nil,arrDict,nil)
-     } else if let arrString = self.convertToStringArray(text: response) {
-     return (true,nil,nil,arrString)
-     }else {
-     if response == "null" {
-     return (true,nil,nil,nil)
-     }
-     return (false,nil,nil,nil)
-     }
-     } else {
-     return (false,nil,nil,nil)
-     }
-     }
-     
-     func convertToDictionary(text: String) -> [String: Any]? {
-     if let data = text.data(using: .utf8) {
-     do {
-     return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-     } catch {
-     print(error.localizedDescription)
-     }
-     }
-     return nil
-     }
-     
-     func convertToArray(text: String) -> [[String: Any]]? {
-     if let data = text.data(using: .utf8) {
-     do {
-     //print(try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]])
-     return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-     } catch {
-     print(error.localizedDescription)
-     }
-     }
-     return nil
-     }
-     
-     func convertToStringArray(text: String) -> [String]? {
-     if let data = text.data(using: .utf8) {
-     do {
-     return try JSONSerialization.jsonObject(with: data, options: []) as? [String]
-     } catch {
-     print(error.localizedDescription)
-     }
-     }
-     return nil
-     }
-     */
     
     //MARK:- Show Response Status Method
     func showErrorMessages(myDict: [String:Any], withCode: Int) -> String {
@@ -574,7 +470,7 @@ public class ApiRequestManager {
             //Logout Automatically
             //            UserDefaultManager.resetUserDefaultValues()
             
-            var isGoBack: Bool = true
+//            var isGoBack: Bool = true
             //            if let arr = APP_DELEGATE.appNavigation?.viewControllers {
             //                for vc in arr {
             //                    if let _ = vc as? TabbarVC {
