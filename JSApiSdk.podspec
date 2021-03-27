@@ -27,7 +27,7 @@ TODO: Add long description of the pod here.
   s.author           = { 'jinals9999' => 'jinal.s@cearsinfotech.com' }
   s.source           = { :git => 'https://github.com/jinals9999/JSApiSdk.git', :tag => s.version.to_s }
   
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '12.1'
 
   s.source_files = 'Classes/**/*'
 
