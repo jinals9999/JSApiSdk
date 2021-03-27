@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JSApiSdk'
-  s.version          = '1.0.0'
-  s.summary          = 'JSApiSdk containt the structure of API calling and easy to use it.'
+  s.version          = '1.0.1'
+  s.summary          = 'JSApiSdk contains the structure of API calling and easy to use it.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -27,7 +27,7 @@ TODO: Add long description of the pod here.
   s.author           = { 'jinals9999' => 'jinal.s@cearsinfotech.com' }
   s.source           = { :git => 'https://github.com/jinals9999/JSApiSdk.git', :tag => s.version.to_s }
   
-  s.ios.deployment_target = '12.1'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'Classes/**/*'
 
