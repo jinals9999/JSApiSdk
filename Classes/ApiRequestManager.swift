@@ -99,7 +99,7 @@ public class ApiRequestManager {
             responseData(nil, nil, nil, nil, "Sorry! You're not connected to network.")
             
         } else {
-            if tokenType.count > 0, tokenType == "",
+            if tokenType.count == 0, tokenType == "",
                accessToken.count == 0, accessToken == "" {
                 print("Please provide access token")
                 responseData(nil, nil, nil, nil, "Please provide access token")
