@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JSApiSdk'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'JSApiSdk contains the structure of API calling and easy to use it.'
 
 # This description is used to generate tags and improve search results.
