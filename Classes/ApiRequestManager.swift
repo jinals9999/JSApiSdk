@@ -39,6 +39,8 @@ public class ApiRequestManager {
             responseData(nil, nil, nil, "Sorry! You're not connected to network.", 0)
             
         } else {
+            self.additionalHeaders = headers
+
             if isToken {
                 if tokenType.count > 0, tokenType == "",
                    accessToken.count == 0, accessToken == "" {
@@ -47,11 +49,9 @@ public class ApiRequestManager {
                 } else {
                     self.strAccessToken = "\(tokenType) \(accessToken)"
                 }
-            } else {
-                self.strAccessToken = ""
+                self.additionalHeaders.add(name: "Authorization", value: self.strAccessToken)
             }
-            self.additionalHeaders = headers
-            
+
             if methodName == .get {
                 self.getRequest(endpointurl: endpointURL, service: apiName) { (error, resArr, resDict, message, statusCode) in
                     responseData(error, resArr, resDict, message, statusCode)
@@ -98,6 +98,8 @@ public class ApiRequestManager {
             responseData(nil, nil, "Sorry! You're not connected to network.", 0)
             
         } else {
+            self.additionalHeaders = headers
+
             if tokenType.count == 0, tokenType == "",
                accessToken.count == 0, accessToken == "" {
                 responseData(nil, nil, "Please provide access token", 0)
@@ -105,7 +107,7 @@ public class ApiRequestManager {
             } else {
                 self.strAccessToken = "\(tokenType) \(accessToken)"
             }
-            self.additionalHeaders = headers
+            self.additionalHeaders.add(name: "Authorization", value: self.strAccessToken)
 
             self.requestWithPostMultipartParam(endpointurl: endpointURL, isImage: isImage, strAppName: apiName, parameters: parameters as NSDictionary) { (error, resDict, errMessage, statusCode) in
                 responseData(error, resDict, errMessage, statusCode)
